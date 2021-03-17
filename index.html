@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    body{
+      background-color: #000000;
+      font-family: futura, medium;
+    }
+    .Table{
+      margin:auto;
+      text-align: center;
+      max-width: 400px;
+      box-shadow: 0px 0px 4px #FFFFFF;
+    }
+    .calcButton{
+      width:100%;
+      height: same-as-width;
+      padding:30px;
+      font-size: 32px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 4px;
+      background-color:#FFFFFF
+    }
+    
+    .secondaryButton{
+      width:100%;
+      height: same-as-width;
+      padding:30px;
+      font-size: 32px;
+      background-color: #00FE84;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+    .Title{
+      font-size: 48px;
+      text-align: center;
+      color: white;
+      margin-top:0;
+    }
+    .MainBox{
+      padding:50px;
+      background-color: #181818;
+      border: 1px solid #FFFFFF;
+      max-width: 450px;
+      margin:auto;
+      top:50%;
+      box-shadow: 0px 0px 16px #FFFFFF;
+      border-radius:8px;
+      margin-top:80px
+    }
+    .valueBox{
+      padding-top:25px;
+      padding-bottom:25px;
+      font-size:42px;
+      color:#000000;
+      text-align: left;
+      width:400px
+    }
+    .calcLogo{
+      max-width: 50px;
+    }
+    .imgDiv{
+      text-align: center;
+      margin:auto;
+      margin-bottom:10px;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="MainBox">
+    <div class="imgDiv">
+      <img src="favicon.ico" alt="Strive School Logo" class="calcLogo">
+    </div>
+    <h1 class="Title">Calculator</h1>
+    <table class="Table">
+      <tr>
+        <td colspan="4">
+          <input class="valueBox" type="text" id="result" value="0" disabled />
+        </td>
+      </tr>
+      <tr>
+        <td><input class="calcButton" type="button" value="7" onclick="" /></td>
+        <td><input class="calcButton" type="button" value="8" /></td>
+        <td><input class="calcButton" type="button" value="9" /></td>
+        <td><input class="secondaryButton" type="button" value="*" /></td>
+      </tr>
+      <tr>
+        <td><input class="calcButton" type="button" value="4" /></td>
+        <td><input class="calcButton" type="button" value="5" /></td>
+        <td><input class="calcButton" type="button" value="6" /></td>
+        <td><input class="secondaryButton" type="button" value="-" /></td>
+      </tr>
+      <tr>
+        <td><input class="calcButton" type="button" value="1" /></td>
+        <td><input class="calcButton" type="button" value="2" /></td>
+        <td><input class="calcButton" type="button" value="3" /></td>
+        <td><input class="secondaryButton" type="button" value="+" /></td>
+      </tr>
+      <tr>
+        <td><input class="secondaryButton" type="button" value="C" /></td>
+        <td><input class="calcButton" type="button" value="0" /></td>
+        <td><input class="secondaryButton" type="button" value="=" /></td>
+        <td><input class="secondaryButton" type="button" value="/" /></td>
+      </tr>
+    </table>
+  </div>
+  <script>
+    window.addEventListener("DOMContentLoaded", function () {
+        // MERORY OF OUR APPLICATION
+        // HERE WE STORE VALUES WE WANT TO BE ABLE TO USE LATER
+        let operation = "";
+        let previousResult = 0; //First operand
+        const result = document.getElementById("result"); // Reference to the input #result DOM element to use later
+
+        // Helper functions for operations
+        const sum = function (x, y) {
+          return x + y;
+        };
+
+        const diff = function (x, y) {
+          return x - y;
+        };
+
+        const mul = function (x, y) {
+          return x * y;
+        };
+
+        const div = function (x, y) {
+          return x / y;
+        };
+
+        // Button of function was pressed
+        // Event-handler "click" is going to fire this function (numericButtonPressed) and passes in the event object of the element clicked
+        const numericButtonPressed = function (event) {
+          const numberPressed = event.target.value;
+
+          // First time you click a number and value is "0" do:
+          if (result.value === "0") {
+            result.value = numberPressed;
+          } else {
+            // Next time result.value will not be "0" anymore, then do this:
+            // Assigns a new value to the #result input by doing result.value + numberPressed
+            result.value += numberPressed;
+          }
+        };
+
+        // Button of function was pressed
+        // Event-handler "click" is going to fire this function (functionButtonPressed) and passes in the event object of the element clicked
+        const functionButtonPressed = function (event) {
+          // Storing the value of the single button (eg "*")
+          const keyPressed = event.target.value;
+
+          // Evaluating which button was pressed
+          switch (keyPressed) {
+            //2) the second time this gets fired it is probably when you ask for the result of the operation "="
+            case "=":
+              //3) Evaluates then what operation symbol was previously stored for eg *
+              switch (operation) {
+                case "+":
+                  result.value = sum(previousResult, parseFloat(result.value));
+                  break;
+                case "-":
+                  result.value = diff(previousResult, parseFloat(result.value));
+                  break;
+                //4) Falling under this condition (operation === "*") it will perform a multiplication and reassigns the value of the input #result as result of mul(x,y)
+                case "*":
+                  result.value = mul(previousResult, parseFloat(result.value));
+                  //5) you can see the result of the operation being displayed in the #result input as it's new result.value
+                  break;
+                case "/":
+                  result.value = div(previousResult, parseFloat(result.value));
+                  break;
+                default:
+                  console.log("Default case");
+              }
+              break;
+            case "C":
+              //Resets everything to the default
+              result.value = 0;
+              previousResult = 0;
+              operation = "";
+
+              console.log("previousResult", previousResult);
+              console.log("operation", operation);
+              break;
+
+            // 1) If the case is neither "=" or "C" it performs the default operation (for eg when the first time you press: +, -, *, /)
+            default:
+              previousResult = parseFloat(result.value);
+              console.log("previousResult", previousResult);
+
+              operation = keyPressed;
+              console.log("operation", operation);
+
+              result.value = "0";
+          }
+        };
+
+        // Grabbing the DOM references of numericButtons and functionButtons, it will return and HTMLCollection of HTML elements which you can cycle through
+        const numericButtons = document.getElementsByClassName("calcButton");
+        const functionButtons = document.getElementsByClassName(
+          "secondaryButton"
+        );
+
+        //Cycling the elements to attach to the single <input onclick="function()" /> an onclick event handler
+        for (let button of numericButtons) {
+          //The event handler knows what function to fire when the single button is pressed
+          button.addEventListener("click", numericButtonPressed);
+        }
+
+        for (let button of functionButtons) {
+          button.addEventListener("click", functionButtonPressed);
+        }
+      });
+  </script>
+
+</body>
+</html>
